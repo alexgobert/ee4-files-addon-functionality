@@ -6,7 +6,7 @@ Plugin URI:  https://github.com/alexgobert/ee4-files-addon-functionality
 Description: Functionality plugin to improve the EE4 files addon, last updated in 2017. 
 Author:      Alex Gobert, 2024-2025 UNAVSA Information Technology Director
 Author URI:  https://alexgobert.github.io/
-Version:     1.0
+Version:     1.1
 License:     GPL-3.0
 License URI: https://opensource.org/license/gpl-3-0
 */
@@ -15,9 +15,13 @@ License URI: https://opensource.org/license/gpl-3-0
 add_filter('ssa_override_filename', 'normalize_filename');
 
 function normalize_filename(string $filename) {
-    $current_date = date('Ymd-his'); // date as 20250101-130559 for January 1st, 2025 at 1:05:59 PM
+    $current_date = new DateTime('now', new DateTimeZone(wp_timezone_string()));
+    $current_date_str = $current_date->format('Ymd-his'); // date as 20250101-130559 for January 1st, 2025 at 1:05:59 PM
 
-    return "$filename-$current_date";
+    $offset = $current_date->format('O');
+    $offset = str_replace('+', 'p', str_replace('-', 'm', $offset));
+
+    return "$filename-$current_date_str$offset";
 }
 
 
