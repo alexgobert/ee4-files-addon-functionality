@@ -17,7 +17,7 @@ add_filter('ssa_override_filename', 'normalize_filename');
 function normalize_filename(string $filename) {
     $current_date = date('Ymd-his'); // date as 20250101-130559 for January 1st, 2025 at 1:05:59 PM
 
-    return $filename . '-' . $current_date;
+    return "$filename-$current_date";
 }
 
 
