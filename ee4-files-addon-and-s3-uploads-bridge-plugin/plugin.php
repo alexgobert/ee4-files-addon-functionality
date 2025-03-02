@@ -10,10 +10,6 @@ Version:     1.3
 License:     GPL-3.0
 License URI: https://opensource.org/license/gpl-3-0
 */
-// define versions and this file
-define('EE_FILE_CORE_VERSION_REQUIRED', '4.8.0.rc.0000');
-define('EE_FILE_VERSION', '1.3');
-define('EE_FILE_PLUGIN_FILE', __FILE__);
 
 define('EE4_FILES_ADDON_UPLOAD_DIR', '/espresso_file_uploads');
 
