@@ -11,6 +11,9 @@ License:     GPL-3.0
 License URI: https://opensource.org/license/gpl-3-0
 */
 
+
+define('EE4_FILES_ADDON_UPLOAD_DIR', '/espresso_file_uploads');
+
 // rename files to reduce filename collisions
 add_filter('ssa_override_filename', 'normalize_filename');
 
@@ -21,23 +24,35 @@ function normalize_filename(string $filename) {
     $offset = $current_date->format('O');
     $offset = str_replace('+', 'p', str_replace('-', 'm', $offset));
 
-    $parsed = parse_url($filename);
-    $parsed['path'] = pathinfo($parsed['path'], PATHINFO_FILENAME) . '-' . $current_date_str . $offset . '.' . pathinfo($parsed['path'], PATHINFO_EXTENSION);
-
-    return unparse_url($parsed);
+    return pathinfo($filename, PATHINFO_FILENAME) . '-' . $current_date_str . $offset . '.' . pathinfo($filename, PATHINFO_EXTENSION);
 }
 
-// from https://www.php.net/manual/en/function.parse-url.php#106731
-function unparse_url($parsed_url) {
-    $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-    $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-    $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-    $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
-    $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
-    $pass     = ($user || $pass) ? "$pass@" : '';
-    $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-    $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
-    $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+// save ee files addon files to a separate directory
+// see Collins Mbaka's notes at https://developer.wordpress.org/reference/hooks/upload_dir/#user-contributed-notes
+add_filter('ssa_change_file_upload_path', 'ee_change_dir');
+function ee_change_dir($param) {
+    $ee_dir = defined('EE4_FILES_ADDON_UPLOAD_DIR') ? EE4_FILES_ADDON_UPLOAD_DIR : '';
 
-    return "$scheme$user$pass$host$port$path$query$fragment";
-  }
+    $param['path'] = str_replace('/uploads', $ee_dir, $param['path']);
+    $param['url'] = str_replace('/uploads', $ee_dir, $param['url']);;
+
+    return $param;
+}
+
+// bridge compatibility of the EE4 files addon and humanmade/s3-uploads. See https://unavsait.atlassian.net/browse/UIT-123?atlOrigin=eyJpIjoiYWIyNjhjYzI2MWRhNDZjMDg3ZTlhZTMzYWJlNGY5OWQiLCJwIjoiaiJ9
+
+add_action('init', 'add_extended_filter');
+
+function add_extended_filter() {
+    add_filter('FHEE__EE_SPCO_Reg_Step_Attendee_Information___generate_question_input__default', 'ssa_render_question_ext', 11, 4);
+}
+
+function ssa_render_question_ext($param1, $type, $question, $args) {
+    require_once __DIR__ . "/classes/EE_SSA_File_Ext.php";
+
+    if ($type == 'file') {
+        return new EE_SSA_FILE_Ext($args);
+    }
+    
+    return $param1;
+}
