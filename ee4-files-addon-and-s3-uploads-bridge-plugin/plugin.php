@@ -4,7 +4,7 @@
 Plugin Name: EE4 Files Addon Functionality Plugin
 Plugin URI:  https://github.com/alexgobert/ee4-files-addon-functionality
 Description: Functionality plugin to improve the EE4 files addon, last updated in 2017. 
-Author:      Alex Gobert, 2024-2025 UNAVSA Information Technology Director
+Author:      Alex Gobert, 2024-2025 UNAVSA Information Technology Director and 2023-2025 UVSA South Secretary
 Author URI:  https://alexgobert.github.io/
 Version:     1.2
 License:     GPL-3.0
