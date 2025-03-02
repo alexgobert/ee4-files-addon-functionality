@@ -6,11 +6,14 @@ Plugin URI:  https://github.com/alexgobert/ee4-files-addon-functionality
 Description: Functionality plugin to improve the EE4 files addon, last updated in 2017. 
 Author:      Alex Gobert, 2024-2025 UNAVSA Information Technology Director and 2023-2025 UVSA South Secretary
 Author URI:  https://alexgobert.github.io/
-Version:     1.2
+Version:     1.3
 License:     GPL-3.0
 License URI: https://opensource.org/license/gpl-3-0
 */
-
+// define versions and this file
+define('EE_FILE_CORE_VERSION_REQUIRED', '4.8.0.rc.0000');
+define('EE_FILE_VERSION', '1.3');
+define('EE_FILE_PLUGIN_FILE', __FILE__);
 
 define('EE4_FILES_ADDON_UPLOAD_DIR', '/espresso_file_uploads');
 
